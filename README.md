@@ -90,8 +90,17 @@ python tools/verify_dataset.py --root /data/aitodv2
 
 ## Usage
 
-**Pretrained weights.** The epoch-115 checkpoint (33.7 AP) will be attached to the
-[v1.0.0 release](https://github.com/taxaceaee/care-tiny/releases).
+**Pretrained weights** (EMA of epoch 115, 33.7 AP, 38.7 MiB) from the
+[v1.0.0 release](https://github.com/taxaceaee/care-tiny/releases/tag/v1.0.0):
+
+```bash
+mkdir -p weights
+curl -L -o weights/care_tiny_b2_aitodv2_ep115.pth \
+    https://github.com/taxaceaee/care-tiny/releases/download/v1.0.0/care_tiny_b2_aitodv2_ep115.pth
+# sha256: ff7286e7e47d0b18d78c61b66db0ce67e53dd5bf678963330e8ce97a0412161d
+```
+
+The file holds only tensors and plain containers and loads with `torch.load(..., weights_only=True)`.
 
 **Evaluate** a checkpoint on the test split (writes all metrics and per-class AP):
 
