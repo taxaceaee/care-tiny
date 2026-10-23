@@ -1,0 +1,50 @@
+{
+  "finished": true,
+  "step": 155520,
+  "time": "2026-10-17T09:22:42",
+  "hours_this_session": 5.438094618651602,
+  "best_val_ap": 0.0,
+  "dfine": {
+    "best_ap": 0.33707629030870995,
+    "best_epoch": 115,
+    "last_ap": 0.33244691622602635,
+    "last_epoch": 160,
+    "reloads": [
+      [
+        121,
+        "stage switch",
+        115
+      ],
+      [
+        126,
+        "patience 6 without a new best",
+        115
+      ],
+      [
+        132,
+        "patience 6 without a new best",
+        115
+      ],
+      [
+        138,
+        "patience 6 without a new best",
+        115
+      ],
+      [
+        144,
+        "patience 6 without a new best",
+        115
+      ],
+      [
+        150,
+        "patience 6 without a new best",
+        115
+      ],
+      [
+        156,
+        "patience 6 without a new best",
+        115
+      ]
+    ]
+  }
+}

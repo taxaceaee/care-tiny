@@ -1,0 +1,156 @@
+# CARE-Tiny (HGNetv2-B2, 10.0M parameters) on AI-TOD-v2: the recipe of the released checkpoint.
+#
+# Trained on trainval (14 018 images) for 160 epochs (120 with strong augmentation + 40 without), batch 16, one GPU,
+# with the Dome-DETR / D-FINE protocol: the EMA is scored on the test split after every epoch from epoch 101 and the
+# best epoch is reported (test AP 33.71 at epoch 115; last epoch 33.24). Every key is documented in
+# care_tiny/config.py; these values equal its defaults.
+#
+#   python tools/train.py --config configs/care_tiny_b2_aitodv2.yaml --data-root /data/aitodv2 --output-dir runs/b2
+#
+# Without test-set selection (train -> val -> test once): add configs/protocol_train_val.yaml.
+model:
+  backbone: hgnetv2_b2.ssld_stage1_in22k_in1k
+  pretrained: true
+  freeze_bn: true
+  freeze_stem: false
+  backbone_levels: 4
+  neck_blocks: [2, 1, 1, 1]
+  neck_dim: 128
+  head_convs: 2
+  hires_dim: 32
+  hires_blocks: 1
+  hires_kernel: 7
+  pix_dim: 8
+  sem_dim: 64
+  sem_obj_cells: 4.0
+  window: 16
+  window_obj: 12.0
+  pyramid_levels: 6
+  query_dim: 192
+  heads: 6
+  scene_layers: 1
+  ctx_dim: 0
+  num_readouts: 2
+  num_classes: 8
+  knn: 16
+  num_candidates: 4096
+  quota_regions: 16
+  quota_per_region: 4
+  k_buckets: [128, 256, 512, 1024, 2048]
+  k_scale: 2.0
+  k_scale_eval: 4.0
+  k_offset: 64
+  count_thr: 0.3
+  spatial_frac: 0.25
+  region_min_prob: 0.05
+  select_score_alpha: 0.35
+  recenter_sig_ema: 0.5
+  edge_overflow_scale: 4.0
+  nwd_const: 12.8
+  small_thr: 16.0
+loss:
+  dense_obj: 1.0
+  dense_cls: 1.0
+  dense_l1: 1.0
+  dense_giou: 2.0
+  dense_nwd: 1.0
+  ref_cls: 1.0
+  ref_l1: 1.0
+  ref_giou: 2.0
+  ref_nwd: 1.0
+  ref_dfl: 0.25
+  dn_weight: 1.0
+  tal_alpha: 1.0
+  tal_beta: 6.0
+  dense_topk: 9
+  dense_radius: 8
+  o2m_topk: 4
+  o2o_passes: 2
+  qfl_beta: 2.0
+  hybrid_iou_weight: 0.7
+  dense_obj_quality: 0.5
+  class_weight_pow: 0.15
+  class_counts: legacy
+  qual_loss_weight: 0.5
+data:
+  root: ''
+  train_split: trainval
+  val_split: ''
+  test_split: test
+  pad_divisor: 32
+  pad_to: 800
+  num_workers: 8
+  prefetch_factor: 4
+  gpu_photometric: true
+  max_train_images: 0
+  max_val_images: 0
+  max_test_images: 0
+  rfs_thr: 0.1
+  aug:
+    photometric_p: 0.5
+    brightness: 0.2
+    contrast: 0.2
+    saturation: 0.2
+    hue: 0.02
+    scale_p: 0.5
+    scale_range: [0.8, 1.25]
+    hflip_p: 0.5
+    vflip_p: 0.5
+    rot90_p: 0.5
+    min_size: 0.5
+    min_visible: 0.5
+    copy_paste_p: 0.5
+    copy_paste_img_frac: 0.1
+    copy_paste_max: 8
+    stage2_keep: [copy_paste]
+train:
+  epochs: 160
+  no_aug_epochs: 40
+  batch_size: 16
+  lr: 0.0002
+  backbone_lr_mult: 0.5
+  weight_decay: 0.0001
+  betas: [0.9, 0.999]
+  warmup_iters: 1000
+  flat_frac: 0.5
+  min_lr_ratio: 0.05
+  clip_grad: 0.1
+  amp: true
+  amp_dtype: bf16
+  ema_decay: 0.9998
+  ema_warmup: 2000
+  train_k_max: 1024
+  dn_per_image: 100
+  dn_bucket: 25
+  seed: 0
+  log_interval: 50
+  val_interval: 0
+  save_every_epochs: 0
+  save_from_epoch: 0
+  time_budget_hours: 0.0
+  channels_last: true
+  compile: true
+  compile_mode: default
+  compile_backbone: true
+  final_test: true
+  test_during_train: true
+  test_eval_from: 101
+  stage2_reload: true
+  stage2_patience: 6
+  stage2_reset_patience: true
+  stage2_no_lr_rewind: true
+  stage2_reload_best_stg2: true
+  stage2_lr_mult: 0.5
+  stage2_ema_decay: 0.9994
+  max_iters: 0
+eval:
+  max_dets: 1500
+  score_thr: 0.001
+  pre_nms_topk: 3000
+  nms_iou: 0.6
+  score_fuse: 0.25
+  coarse_score_mult: 0.95
+  coarse_obj_pow: 0.15
+  batch_size: 16
+  eval_procs: 8
+  stream_scoring: true

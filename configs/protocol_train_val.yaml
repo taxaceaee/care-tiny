@@ -1,0 +1,13 @@
+# Development protocol without test-set selection: train on the train split (11 214 images), score the EMA on the
+# held-out val split (2 804 images) every 10 epochs and after the last one (ema_best_val.pth keeps the best), and
+# score the last EMA on test once at the end. Merged after the model config:
+#   python tools/train.py --config configs/care_tiny_b2_aitodv2.yaml configs/protocol_train_val.yaml \
+#       --data-root /data/aitodv2 --output-dir runs/b2_trainval
+data:
+  train_split: train
+  val_split: val
+train:
+  val_interval: 10
+  test_during_train: false
+  stage2_reload: false
+  final_test: true
